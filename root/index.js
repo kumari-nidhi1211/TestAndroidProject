@@ -27,24 +27,68 @@ export default class Root extends Component {
     };
   }
   onButtonPress(){
-  let listArray = this.state.list;
-  listArray.push(this.state.fname ,
-    this.state.lname ,
-    this.state.email ,
-    this.state.mobile ,
-    this.state.password ,
-    this.state.value );
-  this.setState({list: listArray});
+    let listArray = this.state.list;
+    if(this.state.fname !== '' 
+      && this.state.lname !== '' 
+      && this.state.email !== '' 
+      && this.state.mobile !== '' 
+      && this.state.password !== '' 
+      &&  this.state.value !== '' ){
+      listArray.push(this.state.fname ,
+        this.state.lname ,
+        this.state.email ,
+        this.state.mobile ,
+        this.state.password ,
+        this.state.value );
+      this.setState({list: listArray});
+    }
+    else{
+      alert("All fields are required")
+    }
   };
   WholeData() {
-  return this.state.list.map(function(listValue, i){
-    return(
-      <View key={i}>
-        <Text>{listValue}</Text>
-      </View>
-    );
-  });
-}
+    return this.state.list.map(function(listValue, i){
+      return(
+        <View key={i}>
+          <Text>{listValue}</Text>
+        </View>
+      );
+    });
+  }
+  validateEmail(email) {
+    let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if(email !== ''){
+      if(re.test(email) === false){
+        alert("Invalid email")
+      }
+    }
+  }
+  validateName(name){
+    var re = /^[A-z]+$/;
+    if(name !== ''){
+      if(!re.test(name)){
+        alert("Invalid Name")
+      }
+    }
+  }
+  validateMobile(number){
+    var re = /^[0-9]+$/;
+    if(number !== ''){
+      if(!re.test(number)){
+        alert("Invalid Number")
+      }
+      else if(number.length < 10){
+        alert("Please provide 10 digits !!!")
+      }
+    }
+  }
+  validatePassword(password){
+    if(password !== ''){
+      if(password.length < 8){
+        alert("Minimum 8 digits required")
+      }
+    }
+  }
   render() {
     return (
       <ScrollView>
@@ -61,6 +105,8 @@ export default class Root extends Component {
           underlineColorAndroid={'white'} 
           onChangeText={(text) => this.setState({fname : text})}
           value={this.state.fname}
+          autoCapitalize={'words'}
+          onEndEditing={() => this.validateName(this.state.fname)}
         /> 
         <Text style={styles.instructions}>
           Last Name :  
@@ -70,6 +116,8 @@ export default class Root extends Component {
           underlineColorAndroid={'white'}
           onChangeText={(text) => this.setState({lname : text})}
           value={this.state.lname}
+          autoCapitalize={'words'}
+          onEndEditing={() => this.validateName(this.state.lname)}
         /> 
         <Text style={styles.instructions}>
           Email Id :  
@@ -79,6 +127,7 @@ export default class Root extends Component {
           underlineColorAndroid={'white'}
           onChangeText={(text) => this.setState({email : text})}
           value={this.state.email}
+          onEndEditing={() => this.validateEmail(this.state.email)}
         /> 
         <Text style={styles.instructions}>
           Mobile No :  
@@ -88,6 +137,8 @@ export default class Root extends Component {
           underlineColorAndroid={'white'}
           onChangeText={(text) => this.setState({mobile : text})}
           value={this.state.mobile}
+          maxLength= {10}
+          onEndEditing={() => this.validateMobile(this.state.mobile)}
         /> 
         <Text style={styles.instructions}>
           Password :  
@@ -98,6 +149,7 @@ export default class Root extends Component {
           onChangeText={(text) => this.setState({password : text})}
           secureTextEntry={true}
           value={this.state.password}
+          onEndEditing={() => this.validatePassword(this.state.password)}
         /> 
         <Text style={styles.instructions}>
           Gender :  
@@ -108,7 +160,7 @@ export default class Root extends Component {
             selectedValue={this.state.value}
             onValueChange={(text) => this.setState({value : text})}
             mode="dialog">
-            <Item label="---select---" color="black" value="---select---" />
+            <Item label="---select---" color="black" value="" />
             <Item label="Male" color="black" value="Male" />
             <Item label="Female" color="black" value="Female" />
         </Picker>
@@ -121,8 +173,8 @@ export default class Root extends Component {
         </View>
       </View>
       <View style={{flex:2, backgroundColor:'white',}}>
-      </View>
       {this.WholeData()}
+      </View>
       </View>
       </ScrollView>
     );
