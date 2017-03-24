@@ -8,6 +8,7 @@ import {
   Dimensions,
   Picker,
   Button,
+  ScrollView,
 } from 'react-native';
 const Item = Picker.Item;
 const {height, width} = Dimensions.get('window');
@@ -34,11 +35,21 @@ export default class Root extends Component {
     this.state.password ,
     this.state.value );
   this.setState({list: listArray});
-  
   };
+  WholeData() {
+  return this.state.list.map(function(listValue, i){
+    return(
+      <View key={i}>
+        <Text>{listValue}</Text>
+      </View>
+    );
+  });
+}
   render() {
     return (
+      <ScrollView>
       <View style={styles.container}>
+      <View style={{flex:1,}}>
         <Text style={styles.welcome}>
           Signup 
         </Text>
@@ -85,6 +96,7 @@ export default class Root extends Component {
           style={styles.input} 
           underlineColorAndroid={'white'}
           onChangeText={(text) => this.setState({password : text})}
+          secureTextEntry={true}
           value={this.state.password}
         /> 
         <Text style={styles.instructions}>
@@ -108,6 +120,11 @@ export default class Root extends Component {
         />
         </View>
       </View>
+      <View style={{flex:2, backgroundColor:'white',}}>
+      </View>
+      {this.WholeData()}
+      </View>
+      </ScrollView>
     );
   }
 }
